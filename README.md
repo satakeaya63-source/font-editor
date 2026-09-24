@@ -16,6 +16,10 @@
 - 导入和导出可变字体（VF）；导出时可自选最细、最粗端点。字重通常以 100 为一档，但端点可输入具体数值。
 - 修改字体内部的真实名称，而不只是下载文件名。
 
+**可使用设备：**安卓、iOS、电脑。
+
+**二改与发布：**允许修改并发布修改后的版本，但请标注源头：[本项目](https://github.com/satakeaya63-source/font-editor)与作者无异（小红书号 49686051226）；仍须遵守非商业许可。
+
 - **推荐浏览器（已验证可用）：**QQ 浏览器、Chrome、Via。
 - **不适配的浏览器：**夸克、UC。
 
@@ -33,6 +37,10 @@ A browser-based font editor. Use the [online version](https://fonteditor.692718.
 - Import and export variable fonts (VF). Choose the lightest and heaviest weight endpoints when exporting; weights commonly use 100-point grades, but endpoints accept specific values.
 - Change the font's internal name, not just the downloaded filename.
 
+**Devices:** Android, iOS, and computers.
+
+**Modifications:** You may modify and publish modified versions, but please credit the [original project](https://github.com/satakeaya63-source/font-editor) and its creator 无异 (Xiaohongshu ID 49686051226). The noncommercial license still applies.
+
 If you run into any problems (including, but not limited to, import or export failures), please try switching browsers first; Chrome or Via is preferred. If the bug persists, [report it](https://github.com/satakeaya63-source/font-editor/issues), and I'll do my best to fix it.
 
 Font and image processing happens locally in your browser. See “许可与来源” in the editor for the license, attribution, and third-party notices: **source available, free for personal use, no resale; retain the original project attribution when redistributing modifications**.
@@ -47,6 +55,10 @@ Font and image processing happens locally in your browser. See “许可与来�
 - 可変フォント（VF）の読み込み・書き出し。書き出し時に最細・最太の端点を指定できます。太さは通常 100 刻みで扱いますが、端点には個別の数値も入力できます。
 - ダウンロード名だけでなく、フォント内部の名前も変更。
 
+**対応デバイス：**Android、iOS、パソコン。
+
+**改変と公開：**改変や改変版の公開は可能ですが、[元のプロジェクト](https://github.com/satakeaya63-source/font-editor)と作者の无异（小紅書 ID：49686051226）を明記してください。非商用ライセンスの条件も適用されます。
+
 問題が起きた場合（読み込み・書き出しの失敗などを含みますが、これらに限りません）は、まずブラウザーを変え、Chrome または Via を優先してお試しください。それでも不具合が続く場合は[ご報告ください](https://github.com/satakeaya63-source/font-editor/issues)。できる限り修正します。
 
 フォントや画像の処理はブラウザー内で行います。ライセンス、原作者表示、第三者の著作権表示はツール内の「许可与来源」をご確認ください。**ソース公開、個人利用無料、転売禁止。改変版を再配布する場合は元プロジェクトの表示を保持してください。**
@@ -60,6 +72,10 @@ Font and image processing happens locally in your browser. See “许可与来�
 - 여러 글꼴에서 선택한 글자를 합치거나 같은 글꼴 안에서 글자를 서로 바꿉니다. 숫자·영문자만 선택하거나, 한자를 바꾸지 않고 일본어 히라가나·가타카나만 합칠 수 있습니다.
 - 가변 글꼴(VF)을 가져오고 내보냅니다. 내보낼 때 가장 얇은·굵은 끝값을 지정할 수 있습니다. 굵기는 보통 100 단위로 구분하지만 끝값에는 개별 수치를 입력할 수 있습니다.
 - 다운로드 파일명뿐 아니라 글꼴 내부의 실제 이름도 바꿉니다.
+
+**사용 가능 기기:** Android, iOS, 컴퓨터.
+
+**수정 및 배포:** 수정하거나 수정본을 공개할 수 있지만 [원본 프로젝트](https://github.com/satakeaya63-source/font-editor)와 제작자 无异(샤오홍슈 ID 49686051226)를 명시해 주세요. 비상업적 이용 허가 조건도 적용됩니다.
 
 문제가 발생하면(가져오기·내보내기 실패 등을 포함하되 이에 한정되지 않음), 먼저 브라우저를 바꿔 보세요. Chrome 또는 Via를 우선 사용해 주세요. 그래도 버그가 계속되면 [의견을 남겨 주세요](https://github.com/satakeaya63-source/font-editor/issues). 가능한 한 수정하겠습니다.
 

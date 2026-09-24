@@ -16,6 +16,11 @@
 - 导入和导出可变字体（VF）；导出时可自选最细、最粗端点。字重通常以 100 为一档，但端点可输入具体数值。
 - 修改字体内部的真实名称，而不只是下载文件名。
 
+- **推荐浏览器（已验证可用）：**QQ 浏览器、Chrome、Via。
+- **不适配的浏览器：**夸克、UC。
+
+如果使用有任何问题（包括但不限于：导入失败、导出失败），请先尝试更换浏览器，优先使用 Chrome 或 Via。假如仍旧有 Bug，再[提交意见](https://github.com/satakeaya63-source/font-editor/issues)，我会尽量修改。
+
 字体和图片的处理在浏览器本地完成。许可、署名及第三方来源见工具内的「许可与来源」：**源码公开、个人免费、禁止倒卖；修改后再发布须保留原项目署名**。
 
 ## English
@@ -27,6 +32,8 @@ A browser-based font editor. Use the [online version](https://fonteditor.692718.
 - Merge selected characters from multiple fonts, or swap characters within one font. Filter by digits, English letters, or writing system—for example, merge Japanese hiragana and katakana without replacing kanji.
 - Import and export variable fonts (VF). Choose the lightest and heaviest weight endpoints when exporting; weights commonly use 100-point grades, but endpoints accept specific values.
 - Change the font's internal name, not just the downloaded filename.
+
+If you run into any problems (including, but not limited to, import or export failures), please try switching browsers first; Chrome or Via is preferred. If the bug persists, [report it](https://github.com/satakeaya63-source/font-editor/issues), and I'll do my best to fix it.
 
 Font and image processing happens locally in your browser. See “许可与来源” in the editor for the license, attribution, and third-party notices: **source available, free for personal use, no resale; retain the original project attribution when redistributing modifications**.
 
@@ -40,6 +47,8 @@ Font and image processing happens locally in your browser. See “许可与来�
 - 可変フォント（VF）の読み込み・書き出し。書き出し時に最細・最太の端点を指定できます。太さは通常 100 刻みで扱いますが、端点には個別の数値も入力できます。
 - ダウンロード名だけでなく、フォント内部の名前も変更。
 
+問題が起きた場合（読み込み・書き出しの失敗などを含みますが、これらに限りません）は、まずブラウザーを変え、Chrome または Via を優先してお試しください。それでも不具合が続く場合は[ご報告ください](https://github.com/satakeaya63-source/font-editor/issues)。できる限り修正します。
+
 フォントや画像の処理はブラウザー内で行います。ライセンス、原作者表示、第三者の著作権表示はツール内の「许可与来源」をご確認ください。**ソース公開、個人利用無料、転売禁止。改変版を再配布する場合は元プロジェクトの表示を保持してください。**
 
 ## 한국어
@@ -51,5 +60,7 @@ Font and image processing happens locally in your browser. See “许可与来�
 - 여러 글꼴에서 선택한 글자를 합치거나 같은 글꼴 안에서 글자를 서로 바꿉니다. 숫자·영문자만 선택하거나, 한자를 바꾸지 않고 일본어 히라가나·가타카나만 합칠 수 있습니다.
 - 가변 글꼴(VF)을 가져오고 내보냅니다. 내보낼 때 가장 얇은·굵은 끝값을 지정할 수 있습니다. 굵기는 보통 100 단위로 구분하지만 끝값에는 개별 수치를 입력할 수 있습니다.
 - 다운로드 파일명뿐 아니라 글꼴 내부의 실제 이름도 바꿉니다.
+
+문제가 발생하면(가져오기·내보내기 실패 등을 포함하되 이에 한정되지 않음), 먼저 브라우저를 바꿔 보세요. Chrome 또는 Via를 우선 사용해 주세요. 그래도 버그가 계속되면 [의견을 남겨 주세요](https://github.com/satakeaya63-source/font-editor/issues). 가능한 한 수정하겠습니다.
 
 글꼴과 이미지 처리는 브라우저 안에서 이루어집니다. 라이선스, 저작자 표시 및 제3자 고지는 도구의 「许可与来源」를 확인하세요. **소스 공개, 개인 사용 무료, 재판매 금지. 수정본 재배포 시 원 프로젝트의 저작자 표시를 유지해야 합니다.**

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>字体编辑工具 · V5.4（源码公开 · 个人免费 · 禁止倒卖）</title>
+    <title>字体编辑工具 · V5.5（源码公开 · 个人免费 · 禁止倒卖）</title>
     <meta name="theme-color" content="#3b82f6">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -8736,30 +8736,37 @@ out = BytesIO(); vf.save(out); open('/vf-output.ttf','wb').write(out.getvalue())
                         }
                     }
                 }
-                if (gDefault.lineHeight !== ADJUSTMENT_DEFAULTS.lineHeight) {
-                    // ponytail: 阅读器常忽略 lineGap；把预览相对默认 1.4 的变化写进三套行框度量。
-                    // Win 度量只放大不缩小，避免裁掉原字体上下超出行框的字形。
-                    if (!Number.isFinite(gDefault.lineHeight) || gDefault.lineHeight < 0.8 || gDefault.lineHeight > 2.5) throw new Error(uiText('行距超出字体支持的范围，请调整后重试'));
-                    const factor = gDefault.lineHeight / ADJUSTMENT_DEFAULTS.lineHeight;
+                const sizeFactor = gDefault.size / ADJUSTMENT_DEFAULTS.size;
+                const lineChanged = gDefault.lineHeight !== ADJUSTMENT_DEFAULTS.lineHeight;
+                const metricError = () => new Error(uiText('大小或行距超出字体支持的范围，请调整后重试'));
+                if (!Number.isFinite(sizeFactor) || sizeFactor <= 0 || !Number.isFinite(gDefault.lineHeight) ||
+                    gDefault.lineHeight < 0.8 || gDefault.lineHeight > 2.5) throw metricError();
+                if (sizeFactor !== 1 || lineChanged) {
+                    // ponytail: 字形按 size/48 缩放，行框也必须同倍率；lineHeight 只额外调行框。
+                    const lineFactor = gDefault.lineHeight / ADJUSTMENT_DEFAULTS.lineHeight;
                     const hhea = fontObject.hhea, os2 = fontObject['OS/2'];
                     if (hhea) {
                         const total = hhea.ascent - hhea.descent + (hhea.lineGap || 0);
-                        const scale = total > 0 && hhea.ascent > hhea.descent ? total * factor / (hhea.ascent - hhea.descent) : factor;
-                        hhea.ascent = Math.round(hhea.ascent * scale);
-                        hhea.descent = Math.round(hhea.descent * scale);
-                        hhea.lineGap = 0;
+                        const factor = sizeFactor * (lineChanged && total > 0 && hhea.ascent > hhea.descent ? total * lineFactor / (hhea.ascent - hhea.descent) : lineFactor);
+                        hhea.ascent = Math.round(hhea.ascent * factor);
+                        hhea.descent = Math.round(hhea.descent * factor);
+                        if (lineChanged) hhea.lineGap = 0;
+                        else hhea.lineGap = Math.round(hhea.lineGap * sizeFactor);
                     }
                     if (os2) {
                         const total = os2.sTypoAscender - os2.sTypoDescender + (os2.sTypoLineGap || 0);
-                        const scale = total > 0 && os2.sTypoAscender > os2.sTypoDescender ? total * factor / (os2.sTypoAscender - os2.sTypoDescender) : factor;
-                        os2.sTypoAscender = Math.round(os2.sTypoAscender * scale);
-                        os2.sTypoDescender = Math.round(os2.sTypoDescender * scale);
-                        os2.sTypoLineGap = 0;
-                        os2.usWinAscent = Math.max(os2.usWinAscent, fontObject.head?.yMax || 0, hhea?.ascent || 0, os2.sTypoAscender);
-                        os2.usWinDescent = Math.max(os2.usWinDescent, -(fontObject.head?.yMin || 0), -(hhea?.descent || 0), -os2.sTypoDescender);
+                        const factor = sizeFactor * (lineChanged && total > 0 && os2.sTypoAscender > os2.sTypoDescender ? total * lineFactor / (os2.sTypoAscender - os2.sTypoDescender) : lineFactor);
+                        os2.sTypoAscender = Math.round(os2.sTypoAscender * factor);
+                        os2.sTypoDescender = Math.round(os2.sTypoDescender * factor);
+                        if (lineChanged) os2.sTypoLineGap = 0;
+                        else os2.sTypoLineGap = Math.round(os2.sTypoLineGap * sizeFactor);
+                        // Win 不随单独缩小行距降低，避免裁字；缩小字形时则跟着缩小。
+                        os2.usWinAscent = Math.round(os2.usWinAscent * sizeFactor * Math.max(1, lineFactor));
+                        os2.usWinDescent = Math.round(os2.usWinDescent * sizeFactor * Math.max(1, lineFactor));
                     }
-                    if ([hhea?.ascent, hhea?.descent, os2?.sTypoAscender, os2?.sTypoDescender].some(v => v !== undefined && (!Number.isFinite(v) || v < -32768 || v > 32767)) ||
-                        [os2?.usWinAscent, os2?.usWinDescent].some(v => v !== undefined && (!Number.isFinite(v) || v < 0 || v > 65535))) throw new Error(uiText('行距超出字体支持的范围，请调整后重试'));
+                    if ([hhea?.ascent, hhea?.descent, hhea?.lineGap, os2?.sTypoAscender, os2?.sTypoDescender, os2?.sTypoLineGap]
+                        .some(v => v !== undefined && (!Number.isInteger(v) || v < -32768 || v > 32767)) ||
+                        [os2?.usWinAscent, os2?.usWinDescent].some(v => v !== undefined && (!Number.isInteger(v) || v < 0 || v > 65535))) throw metricError();
                 }
                 if (adjustedCount > 0) logStatus(`✅ 已调整 ${adjustedCount} 个字形`, 'success');
 
@@ -8923,14 +8930,67 @@ out = BytesIO(); vf.save(out); open('/vf-output.ttf','wb').write(out.getvalue())
                     }
                 }
 
+                // fonteditor-core 不保留 vhea/vmtx：原始竖排度量须一同回写，不能只缩字形。
+                const sourceVhea = readTableBytes(state.fontBuffer, 'vhea');
+                const sourceVmtx = readTableBytes(state.fontBuffer, 'vmtx');
+                const verticalTables = [];
+                if (sizeFactor !== 1 || lineChanged) {
+                    if (!!sourceVhea !== !!sourceVmtx) throw metricError();
+                    if (sourceVhea && sourceVmtx) {
+                        const srcCount = new DataView(readTableBytes(state.fontBuffer, 'maxp').buffer).getUint16(4);
+                        if (sourceVhea.length < 36 || fontObject.glyf.length !== srcCount) throw metricError(); // 新增字形需重建逐字形竖排指标
+                        const vhea = sourceVhea.slice(), vmtx = sourceVmtx.slice();
+                        const vh = new DataView(vhea.buffer), vm = new DataView(vmtx.buffer);
+                        const longCount = vh.getUint16(34);
+                        if (!longCount || longCount > srcCount || vmtx.length < longCount * 4 + (srcCount - longCount) * 2) throw metricError();
+                        if (sizeFactor !== 1) {
+                            const signed = (view, offset) => {
+                                const n = Math.round(view.getInt16(offset) * sizeFactor);
+                                if (n < -32768 || n > 32767) throw metricError();
+                                view.setInt16(offset, n);
+                            };
+                            const unsigned = (view, offset) => {
+                                const n = Math.round(view.getUint16(offset) * sizeFactor);
+                                if (n < 0 || n > 65535) throw metricError();
+                                view.setUint16(offset, n);
+                            };
+                            for (const o of [4, 6, 8, 12, 14, 16, 22]) signed(vh, o);
+                            unsigned(vh, 10);
+                            for (let i = 0; i < longCount; i++) { unsigned(vm, i * 4); signed(vm, i * 4 + 2); }
+                            for (let i = longCount; i < srcCount; i++) signed(vm, longCount * 4 + (i - longCount) * 2);
+                        }
+                        verticalTables.push({ tag: 'vhea', data: vhea }, { tag: 'vmtx', data: vmtx });
+                    }
+                }
+                // 拒绝 16 位头边界及水平度量溢出，避免 writer 悄悄截断坐标。
+                if (sizeFactor !== 1 || lineChanged) for (const glyph of fontObject.glyf) {
+                    if (!glyph) continue;
+                    if (glyph.contours?.some(c => c.some(p => !Number.isFinite(p.x) || !Number.isFinite(p.y) ||
+                        p.x < -32768 || p.x > 32767 || p.y < -32768 || p.y > 32767)) ||
+                        !Number.isFinite(glyph.advanceWidth) || glyph.advanceWidth < 0 || glyph.advanceWidth > 65535) throw metricError();
+                }
                 btn.textContent = '⏳ 生成字体中...';
                 logStatus('⏳ 正在生成TTF文件...', 'info');
                 await new Promise(resolve => setTimeout(resolve, 0));
                 let buffer;
                 try {
                     buffer = editor.write({ type: 'ttf', hinting: true, kerning: true });
-                    buffer = appendTables(buffer, [{ tag: 'cmap', data: buildCmapTable(fontObject.glyf) }]);
-                } catch (_) {
+                    buffer = appendTables(buffer, [{ tag: 'cmap', data: buildCmapTable(fontObject.glyf) }, ...verticalTables]);
+                    if (sizeFactor !== 1 || lineChanged) {
+                        const head = readTableBytes(buffer, 'head'), os2 = readTableBytes(buffer, 'OS/2');
+                        if (head && os2) {
+                            const hd = new DataView(head.buffer), od = new DataView(os2.buffer);
+                            for (const [offset, bound] of [[74, Math.max(0, hd.getInt16(42), fontObject.hhea?.ascent || 0, fontObject['OS/2']?.sTypoAscender || 0)],
+                                [76, Math.max(0, -hd.getInt16(38), -(fontObject.hhea?.descent || 0), -(fontObject['OS/2']?.sTypoDescender || 0))]]) {
+                                const value = Math.max(od.getUint16(offset), bound);
+                                if (value > 65535) throw metricError();
+                                od.setUint16(offset, value);
+                            }
+                            buffer = appendTables(buffer, [{ tag: 'OS/2', data: os2 }]);
+                        }
+                    }
+                } catch (e) {
+                    if (e.message === metricError().message) throw e;
                     throw new Error('字体生成失败，当前字体结构可能不兼容');
                 }
                 const glyphGrew = fontObject.glyf.length > srcGlyphCount;
@@ -9671,6 +9731,10 @@ out = BytesIO(); vf.save(out); open('/vf-output.ttf','wb').write(out.getvalue())
         // ===== 更新日志 =====
         // ponytail: 新公告独立首块，历史版本原样保留。
         const CHANGELOG = [
+            { ver: 'V5.5', date: '2026.11.22', items: [
+                '修复了调大小后行高不跟着变的问题：现在调大调小时，行距、上下沿和字宽会按同一比例一起变，换到阅读软件里不会再出现字挤在一起或空隙过大。',
+                '只调整行距时不再顺手改动字形大小；默认参数导出与原件完全一致，超出字体支持范围会直接提示，不会导出坏字体。',
+            ] },
             { ver: 'V5.4', date: '2026.10.21', items: [
                 '修复了「来」「培」等字调粗细时，有一笔小点反而变细的问题；现在小点会和其他笔画一起正常变粗、变细。',
                 '修复了「圈」「调」这类带外框的字调粗细时，里面的笔画反而变细的问题；现在外框和里面的笔画会一起正常变粗、变细。',
